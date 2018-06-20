@@ -5,14 +5,6 @@ import json
 #configuracion inicial
 app = Flask(__name__)
 #creadion de la db
-'''
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="camilaferno",
-    password="mydatabase",
-    hostname="camilaferno.mysql.pythonanywhere-services.com",
-    databasename="camilaferno$RFIDdatabase",
-)
-'''
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////home/camilaferno/RFIDDdatabase/RFIDdatabase.db"
 
