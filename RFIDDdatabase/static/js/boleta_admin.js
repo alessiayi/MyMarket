@@ -1,6 +1,6 @@
-
+var boletas
 function begin(){
-  var boletas
+
   $.getJSON("/boletas", function(data){
     boletas = data["todo"]
   })
@@ -9,6 +9,7 @@ function begin(){
 
 
 function rest(){
+    alert("Estas son todas las boletas")
   $(function(){
       var dataGrid = $("#gridContainer").dxDataGrid({
           dataSource: boletas,
