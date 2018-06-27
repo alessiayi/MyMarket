@@ -294,15 +294,15 @@ img::-moz-selection {
     margin: auto;
     font-size: 290%;
 }
-.form {    
+.form {
     position: relative;
     z-index: 1;
-    background-color: #000;    
+    background-color: #000;
     max-width: 360px;
     margin: 0 auto 0;
     padding: 45px 45px 15px 45px;
     text-align: center;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);  
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 .form h1{
     font-family: 'Cabin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -323,7 +323,7 @@ img::-moz-selection {
   font-family: 'Josefin Sans', sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #1d8c31;
+  background: #7eb2be;
   width: 100%;
   border: 0;
   padding: 15px;

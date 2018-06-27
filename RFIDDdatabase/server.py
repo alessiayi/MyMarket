@@ -142,16 +142,32 @@ def postcompras():
 def getcompras():
     return json.dumps(boletalist)
 
+
+# Devuelve todos los productos con sus numeros de boletas de la tabla Boletas (para ser utilizado por el Registro de boletas en admin)
+@app.route("/boletas", methods=["GET"])
+def getboletas():
+    jsonboletas = []
+    for x in Boletas.query.all():
+        todasboletas = {}
+        producto = Productos.query.filter_by(id=x.producto_id).first()
+        #todasboletas["Numero_Boleta"] = boleta.numeroboleta
+        todasboletas["Numero_Boleta"] = x.numeroboleta
+        todasboletas["UID_Code"] = producto.UID_Code
+        todasboletas["Nombre_Producto"] = producto.Nombre_Producto
+        todasboletas["Precio"] = "$ " + str(producto.Precio)
+
+        jsonboletas.append(todasboletas)
+
+    return json.dumps({"todo": jsonboletas})
+
+
 # Devuelve el numero de boleta actual (ultimo)
-
-
 @app.route("/numboleta", methods=['GET'])
 def get_currentnumboleta():
     return str(numboleta)
 
+
 # Cambia el numero de boleta y elimina los productos en la lista (para comenzar nueva boleta). Formato:{"numeroboleta": <numero>}
-
-
 @app.route("/numboleta", methods=['POST'])
 def set_currentnumboleta():
     global numboleta
@@ -290,9 +306,8 @@ def stock_cashier():
 def shopping_cart():
     return render_template("boleta_cajero.html")
 
+
 # Para admin
-
-
 @app.route("/stock_admin")
 def stock_admin():
     return render_template("inventario_admin.html")
