@@ -39,11 +39,14 @@ Tarjeta3_id = "1501592416254"
 continue_reading = True
 
 # Capture SIGINT for cleanup when the script is aborted
-def end_read(signal,frame):
+
+
+def end_read(signal, frame):
     global continue_reading
     print "Ctrl+C captured, ending read."
     continue_reading = False
     GPIO.cleanup()
+
 
 # Hook the SIGINT
 signal.signal(signal.SIGINT, end_read)
@@ -59,27 +62,27 @@ print "Press Ctrl-C to stop."
 while continue_reading:
 
     # Scan for cards
-    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+    (status, TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
 
     # If a card is found
     if status == MIFAREReader.MI_OK:
         print "Card detected"
 
     # Get the UID of the card
-    (status,uid) = MIFAREReader.MFRC522_Anticoll()
+    (status, uid) = MIFAREReader.MFRC522_Anticoll()
 
     # If we have the UID, continue
     if status == MIFAREReader.MI_OK:
 
-        #Transforma el UID a string
-        uid1=str(uid[0]) + str(uid[1]) + str(uid[2]) + str(uid[3]) + str(uid[4])
+        # Transforma el UID a string
+        uid1 = str(uid[0]) + str(uid[1]) + str(uid[2]) + str(uid[3]) + str(uid[4])
         print "uid1= ", uid1
 
         # Print UID
         print "Card read UID: %s,%s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3], uid[4])
 
         # This is the default key for authentication
-        key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
+        key = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
         # Select the scanned tag
         MIFAREReader.MFRC522_SelectTag(uid)
@@ -87,22 +90,31 @@ while continue_reading:
         # Authenticate
         status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 8, key, uid)
 
-
         # Check if authenticated
         if status == MIFAREReader.MI_OK:
             MIFAREReader.MFRC522_Read(8)
             MIFAREReader.MFRC522_StopCrypto1()
 
-            #Sends request to the server
+            # Sends request to the server
             print '{"nombre": "'+uid1+'"}'
-            r=requests.post('http://127.0.0.1:5000/compras','{"nombre": "'+uid1+'"}', headers={'Content-Type':'application/json'})
-            if r.status_code==200:
-                print "good datos"
+            r = requests.post('http://127.0.0.1:5000/compras',
+                              '{"nombre": "'+uid1+'"}', headers={'Content-Type': 'application/json'})
+
+            if r.status_code == 200:
+                print "good datos local"
             else:
-                print 'bad request'
+                print 'bad request local'
+
+            r = requests.post('http://camilaferno.pythonanywhere.com/compras',
+                              '{"nombre": "'+uid1+'"}', headers={'Content-Type': 'application/json'})
+
+            if r.status_code == 200:
+                print "good datos remote"
+            else:
+                print 'bad request remote'
 
         else:
             print "Authentication error"
 
-        #Espera un rato antes de leer las tarjetas
+        # Espera un rato antes de leer las tarjetas
         time.sleep(2)
